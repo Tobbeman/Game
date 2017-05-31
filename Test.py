@@ -11,13 +11,12 @@ black = (0,0,0)
 pink = (255,200,200)
 
 #Screen
-size = width, height = 320, 240
+size = width, height = 320, 320
 screen = pygame.display.set_mode(size)
 
 #Player
 player = pygame.Rect(0,0,20,20)
-dx = 0
-dy = 0
+dx, dy = 0, 0
 playerSpeed = [1, 1]  #x,y
 
 #Variables
@@ -29,6 +28,34 @@ moveRight = False
 moveUp = False
 moveDown = False
 
+#Level
+level = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+         ]
+
+levelBlocks = []
+blockOffsetX = 0
+blockOffsetY = 0
+for x in range (16):
+    for y in range (16):
+        if level[x][y] == 1:
+            levelBlocks.append(pygame.Rect(x + blockOffsetX,y + blockOffsetY,16,16))
+        blockOffsetY += height / 16
+    blockOffsetX += width / 16
 while 1:
     #Handle events
     for event in pygame.event.get():
@@ -44,7 +71,7 @@ while 1:
                 moveUp = True
             if event.key == pygame.K_DOWN:
                 moveDown = True
-                
+
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
                 moveLeft = False
@@ -75,8 +102,12 @@ while 1:
     if 0 < player.y + dy and player.y + player.height + dy < height:
         player.y += dy
 
-    #Print screen
+    #Print inside screen
     screen.fill(black)
-    pygame.draw.rect(screen,white,player)
+
+    for block in levelBlocks:
+        pygame.draw.rect(screen,white,block)
+
+    pygame.draw.rect(screen,blue,player)
     pygame.time.Clock().tick(60) #Change?
     pygame.display.flip()
