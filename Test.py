@@ -29,7 +29,7 @@ moveUp = False
 moveDown = False
 
 #Level
-level = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+level = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -53,9 +53,11 @@ blockOffsetY = 0
 for x in range (16):
     for y in range (16):
         if level[x][y] == 1:
-            levelBlocks.append(pygame.Rect(x + blockOffsetX,y + blockOffsetY,16,16))
+            levelBlocks.append(pygame.Rect(x + blockOffsetX,y + blockOffsetY,width / 16,height / 16))
         blockOffsetY += height / 16
     blockOffsetX += width / 16
+
+#Main loop
 while 1:
     #Handle events
     for event in pygame.event.get():
