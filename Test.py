@@ -19,6 +19,7 @@ screen = pygame.display.set_mode(size)
 
 #Player
 player = pygame.Rect(0,0,blockSize,blockSize)
+playerColl = player.copy()
 dx, dy = 0, 0
 playerSpeed = [1, 1]  #x,y
 
@@ -28,8 +29,9 @@ gravity = 0.1
 #Flags
 moveLeft = False
 moveRight = False
-moveUp = False
-moveDown = False
+jump = False
+canMove = True
+falling = True
 
 #Level
 level = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -45,7 +47,7 @@ level = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]]
 
@@ -55,8 +57,10 @@ blockOffsetY = 0
 for x in range (0,16):
     for y in range (0,16):
         if level[y][x] == 1: #Reverse order for whatever reason
-            levelBlocks.append(pygame.Rect(blockOffsetX,blockOffsetY, 16, 16))
-            #print("x: ",blockOffsetX,"y: ",blockOffsetY)
+            levelBlocks.append(pygame.Rect(blockOffsetX,blockOffsetY, blockSize, blockSize))
+        if level[y][x] == 2: #Reverse order for whatever reason
+            player.x = blockOffsetX
+            player.y = blockOffsetY
         blockOffsetY += blockSize
     blockOffsetY = 0
     blockOffsetX += blockSize
@@ -74,9 +78,7 @@ while 1:
             if event.key == pygame.K_RIGHT:
                 moveRight = True
             if event.key == pygame.K_UP:
-                moveUp = True
-            if event.key == pygame.K_DOWN:
-                moveDown = True
+                jump = True
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
@@ -86,10 +88,7 @@ while 1:
                 moveRight = False
                 dx = 0
             if event.key == pygame.K_UP:
-                moveUp = False
-                dy = 0
-            if event.key == pygame.K_DOWN:
-                moveDown = False
+                jump = False
                 dy = 0
 
     #Movement Logic
@@ -97,22 +96,34 @@ while 1:
         dx = -playerSpeed[0]
     if moveRight:
         dx = playerSpeed[0]
-    if moveUp:
+    if jump:
         dy = -playerSpeed[1]
-    if moveDown:
-        dy = playerSpeed[1]
-
-    #Collision
-    if 0 < player.x + dx and player.x + player.width + dx < width:
-        player.x += dx
-    if 0 < player.y + dy and player.y + player.height + dy < height:
-        player.y += dy
 
     #Print inside screen
     screen.fill(black)
 
+    #Collision
+    if falling:
+        dy += gravity
+
+    playerColl.x = player.x + dx
+    playerColl.y = player.y + dy
+    move = True
+    falling = True
+    
+    #Handle everything related to the levelblocks
     for block in levelBlocks:
+        #Print
         pygame.draw.rect(screen,white,block)
+        #Collision
+        if playerColl.colliderect(block):
+            move = False
+            falling = False
+
+    if move:
+        player.x = playerColl.x
+        if falling:
+            player.y = playerColl.y
 
     pygame.draw.rect(screen,blue,player)
     pygame.time.Clock().tick(60) #Change?
