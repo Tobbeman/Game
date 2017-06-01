@@ -32,7 +32,7 @@ moveUp = False
 moveDown = False
 
 #Level
-level = [[1,2,3,4,1,1,1,1,1,1,1,1,1,1,1,1],
+level = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -54,13 +54,12 @@ blockOffsetX = 0
 blockOffsetY = 0
 for x in range (0,16):
     for y in range (0,16):
-        print (level[x][y])
-        if level[x][y] == 1:
+        if level[y][x] == 1: #Reverse order for whatever reason
             levelBlocks.append(pygame.Rect(blockOffsetX,blockOffsetY, 16, 16))
             #print("x: ",blockOffsetX,"y: ",blockOffsetY)
-        blockOffsetX += blockSize
-    blockOffsetX = 0
-    blockOffsetY += blockSize
+        blockOffsetY += blockSize
+    blockOffsetY = 0
+    blockOffsetX += blockSize
 
 #Main loop
 while 1:
