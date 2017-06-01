@@ -10,12 +10,15 @@ white = (255,255,255)
 black = (0,0,0)
 pink = (255,200,200)
 
+#
+blockSize = 16
+
 #Screen
-size = width, height = 320, 320
+size = width, height = 16 * blockSize, 16 * blockSize
 screen = pygame.display.set_mode(size)
 
 #Player
-player = pygame.Rect(0,0,20,20)
+player = pygame.Rect(0,0,blockSize,blockSize)
 dx, dy = 0, 0
 playerSpeed = [1, 1]  #x,y
 
@@ -34,6 +37,7 @@ level = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -43,19 +47,19 @@ level = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-         [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-         ]
+         [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]]
 
 levelBlocks = []
 blockOffsetX = 0
 blockOffsetY = 0
-for x in range (16):
-    for y in range (16):
+for x in range (0,16):
+    for y in range (0,16):
         if level[x][y] == 1:
-            levelBlocks.append(pygame.Rect(x + blockOffsetX,y + blockOffsetY,width / 16,height / 16))
-        blockOffsetY += height / 16
-    blockOffsetX += width / 16
+            levelBlocks.append(pygame.Rect(blockOffsetX,blockOffsetY, 16, 16))
+            print("x: ",blockOffsetX,"y: ",blockOffsetY)
+        blockOffsetX += blockSize
+    blockOffsetX = 0
+    blockOffsetY += blockSize
 
 #Main loop
 while 1:
