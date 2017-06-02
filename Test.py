@@ -19,7 +19,8 @@ screen = pygame.display.set_mode(size)
 
 #Player
 player = pygame.Rect(0,0,blockSize,blockSize)
-playerColl = player.copy()
+playerCollRectX = player.copy()
+playerCollRectY = playerCollRectX.copy()
 dx, dy = 0, 0
 playerSpeed = [1, 1]  #x,y
 
@@ -30,7 +31,8 @@ gravity = 0.1
 moveLeft = False
 moveRight = False
 jump = False
-canMove = True
+playerCollX = False
+playerCollY = False
 falling = True
 
 #Level
@@ -46,7 +48,7 @@ level = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+         [0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
          [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
          [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]]
@@ -56,9 +58,9 @@ blockOffsetX = 0
 blockOffsetY = 0
 for x in range (0,16):
     for y in range (0,16):
-        if level[y][x] == 1: #Reverse order for whatever reason
+        if level[y][x] == 1:
             levelBlocks.append(pygame.Rect(blockOffsetX,blockOffsetY, blockSize, blockSize))
-        if level[y][x] == 2: #Reverse order for whatever reason
+        if level[y][x] == 2:
             player.x = blockOffsetX
             player.y = blockOffsetY
         blockOffsetY += blockSize
@@ -106,24 +108,29 @@ while 1:
     if falling:
         dy += gravity
 
-    playerColl.x = player.x + dx
-    playerColl.y = player.y + dy
-    move = True
-    falling = True
-    
+    playerCollRectX.x = player.x + dx
+    playerCollRectX.y = player.y
+    playerCollRectY.y = player.y + dy
+    playerCollRectY.x = player.x
+    playerCollX = False
+    playerCollY = False
+
+
     #Handle everything related to the levelblocks
     for block in levelBlocks:
         #Print
         pygame.draw.rect(screen,white,block)
         #Collision
-        if playerColl.colliderect(block):
-            move = False
-            falling = False
+        if playerCollRectX.colliderect(block):
+            playerCollX = True
+        if playerCollRectY.colliderect(block):
+            playerCollY = True
 
-    if move:
-        player.x = playerColl.x
-        if falling:
-            player.y = playerColl.y
+
+    if not playerCollX:
+        player.x = playerCollRectX.x
+    if not playerCollY:
+        player.y = playerCollRectY.y
 
     pygame.draw.rect(screen,blue,player)
     pygame.time.Clock().tick(60) #Change?
