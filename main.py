@@ -1,4 +1,6 @@
 import sys, pygame
+from player import Player
+
 pygame.init()
 
 #Colors
@@ -18,11 +20,8 @@ size = width, height = 16 * blockSize, 16 * blockSize
 screen = pygame.display.set_mode(size)
 
 #Player
-player = pygame.Rect(0,0,blockSize,blockSize)
-playerCollRectX = player.copy()
-playerCollRectY = playerCollRectX.copy()
-dx, dy = 0, 0
-playerSpeed = [1, 1]  #x,y
+player = Player((40,40), blockSize, blue)
+player.accelerate((10.0,2))
 
 #Variables
 gravity = 0.1
@@ -93,45 +92,24 @@ while 1:
                 jump = False
                 dy = 0
 
-    #Movement Logic
-    if moveLeft:
-        dx = -playerSpeed[0]
-    if moveRight:
-        dx = playerSpeed[0]
-    if jump:
-        dy = -playerSpeed[1]
 
+
+    
+
+    
+    player.move()
+    
+
+    
     #Print inside screen
     screen.fill(black)
-
-    #Collision
-    if falling:
-        dy += gravity
-
-    playerCollRectX.x = player.x + dx
-    playerCollRectX.y = player.y
-    playerCollRectY.y = player.y + dy
-    playerCollRectY.x = player.x
-    playerCollX = False
-    playerCollY = False
-
 
     #Handle everything related to the levelblocks
     for block in levelBlocks:
         #Print
         pygame.draw.rect(screen,white,block)
-        #Collision
-        if playerCollRectX.colliderect(block):
-            playerCollX = True
-        if playerCollRectY.colliderect(block):
-            playerCollY = True
+    
 
-
-    if not playerCollX:
-        player.x = playerCollRectX.x
-    if not playerCollY:
-        player.y = playerCollRectY.y
-
-    pygame.draw.rect(screen,blue,player)
+    pygame.draw.rect(screen,blue,player.rect)
     pygame.time.Clock().tick(60) #Change?
     pygame.display.flip()
