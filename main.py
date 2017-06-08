@@ -1,4 +1,4 @@
-import sys, pygame
+import sys, pygame, math
 from player import Player
 
 pygame.init()
@@ -21,7 +21,7 @@ screen = pygame.display.set_mode(size)
 
 #Player
 player = Player((40,40), blockSize, blue)
-player.accelerate((10.0,2))
+player.accelerate((math.pi/3,2))
 
 #Variables
 gravity = 0.1
@@ -111,5 +111,5 @@ while 1:
     
 
     pygame.draw.rect(screen,blue,player.rect)
-    pygame.time.Clock().tick(60) #Change?
+    pygame.time.Clock().tick(10) #Change?
     pygame.display.flip()

@@ -3,8 +3,8 @@ import math, pygame
 def addVectors(r1, r2):
     """ Returns the sum of two vectors """
     """ [0] = angle, [1] = lenght """
-    x  = math.sin(r1[0]) * r1[1] + math.sin(r2[0]) * r2[1]
-    y  = math.cos(r1[0]) * r1[1] + math.cos(r2[0]) * r2[1]
+    x  = (math.sin(r1[0]) * r1[1]) + (math.sin(r2[0]) * r2[1])
+    y  = (math.cos(r1[0]) * r1[1]) + (math.cos(r2[0]) * r2[1])
     
     angle  = 0.5 * math.pi - math.atan2(y, x)
     length = math.hypot(x, y)
@@ -15,6 +15,7 @@ class Player:
 
     def __init__(self, pos, size, color):
         self.rect = pygame.Rect(pos[0],pos[1],size,size)
+        self.collRect = self.rect
         self.speed = 0
         self.angle = 0
 
